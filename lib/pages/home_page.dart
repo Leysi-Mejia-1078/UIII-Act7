@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
                 return Dismissible(
                   onDismissed: (direction) async {
                     await deletePeople(snapshot.data?[index]['uid']);
+                    snapshot.data?.remove(index);
                   },
                   confirmDismiss: (direction) async {
                     bool result = false;
@@ -61,7 +62,7 @@ class _HomeState extends State<Home> {
                   },
                   background: Container(
                     color: const Color.fromARGB(255, 21, 97, 238),
-                    child: const Icon(Icons.delete, color: Colors.white,),
+                    child: const Icon(Icons.delete, color: Colors.white),
                   ),
                   direction: DismissDirection.endToStart,
                   key: Key(snapshot.data?[index]['uid']),
@@ -92,7 +93,7 @@ class _HomeState extends State<Home> {
           await Navigator.pushNamed(context, '/add');
           setState(() {});
         },
-        child: Icon(Icons.add, color: Colors.white,),
+        child: Icon(Icons.add, color: Colors.white),
         backgroundColor: const Color.fromARGB(255, 132, 180, 243),
       ),
     );
