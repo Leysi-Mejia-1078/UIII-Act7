@@ -60,8 +60,8 @@ class _HomeState extends State<Home> {
                     return result;
                   },
                   background: Container(
-                    color: Colors.red,
-                    child: const Icon(Icons.delete),
+                    color: const Color.fromARGB(255, 21, 97, 238),
+                    child: const Icon(Icons.delete, color: Colors.white,),
                   ),
                   direction: DismissDirection.endToStart,
                   key: Key(snapshot.data?[index]['uid']),
@@ -92,7 +92,8 @@ class _HomeState extends State<Home> {
           await Navigator.pushNamed(context, '/add');
           setState(() {});
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white,),
+        backgroundColor: const Color.fromARGB(255, 132, 180, 243),
       ),
     );
   }

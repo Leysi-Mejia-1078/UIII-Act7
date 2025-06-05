@@ -30,15 +30,16 @@ class _EditNamePageState extends State<EditNamePage> {
               decoration: InputDecoration(hintText: 'Ingrese la modificacion'),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 132, 180, 243), // Color de fondo
+                foregroundColor: Colors.white, // Color del texto
+              ),
               onPressed: () async {
                 await updatePeople(arguments['uid'], nameController.text).then((_) {
                   Navigator.pop(context);
                 });
               },
               child: Text('Actualizar'),
-              // style: ElevatedButton.styleFrom(
-              //   backgroundColor: const Color.fromARGB(255, 132, 180, 243),
-              // ),
             ),
           ],
         ),
