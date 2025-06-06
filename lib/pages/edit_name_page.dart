@@ -9,16 +9,43 @@ class EditNamePage extends StatefulWidget {
 }
 
 class _EditNamePageState extends State<EditNamePage> {
-  TextEditingController nameController = TextEditingController(text: "");
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController correoController = TextEditingController();
+  final TextEditingController direccionController = TextEditingController();
+  final TextEditingController horarioController = TextEditingController();
+  final TextEditingController telefonoController = TextEditingController();
+  final TextEditingController empleadoController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // No se puede acceder a ModalRoute.of(context) aquí porque el context aún no está completamente inicializado
+    // Por eso hacemos esta asignación dentro de didChangeDependencies
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
+
+    // Solo asignar si los controladores están vacíos para evitar reasignar múltiples veces
+    if (nameController.text.isEmpty) {
+      nameController.text = arguments['nombre'] ?? '';
+      correoController.text = arguments['correo'] ?? '';
+      direccionController.text = arguments['direccion'] ?? '';
+      horarioController.text = arguments['horario'] ?? '';
+      telefonoController.text = (arguments['telefono'] ?? '').toString();
+      empleadoController.text = (arguments['id_empleado'] ?? '').toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
-    nameController.text = arguments['name'];
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit name'),
+        title: const Text('Editar sucursal'),
         backgroundColor: const Color.fromARGB(255, 132, 180, 243),
       ),
       body: Padding(
@@ -27,19 +54,58 @@ class _EditNamePageState extends State<EditNamePage> {
           children: [
             TextField(
               controller: nameController,
-              decoration: InputDecoration(hintText: 'Ingrese la modificacion'),
+              decoration: const InputDecoration(hintText: 'Ingrese la modificación'),
             ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: correoController,
+              decoration: const InputDecoration(hintText: 'Ingrese el nuevo correo'),
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: direccionController,
+              decoration: const InputDecoration(hintText: 'Ingrese la nueva dirección'),
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: horarioController,
+              decoration: const InputDecoration(hintText: 'Ingrese el nuevo horario'),
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: telefonoController,
+              decoration: const InputDecoration(hintText: 'Ingrese el nuevo teléfono'),
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: empleadoController,
+              decoration: const InputDecoration(hintText: 'Ingrese el nuevo encargado'),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 30),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 132, 180, 243), // Color de fondo
-                foregroundColor: Colors.white, // Color del texto
+                backgroundColor: const Color.fromARGB(255, 132, 180, 243),
+                foregroundColor: Colors.white,
               ),
               onPressed: () async {
-                await updatePeople(arguments['uid'], nameController.text).then((_) {
-                  Navigator.pop(context);
-                });
+                final int telefono = int.tryParse(telefonoController.text) ?? 0;
+                final int empleado = int.tryParse(empleadoController.text) ?? 0;
+                final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
+
+                await updateSucursal(
+                  arguments['uid'],
+                  nameController.text,
+                  correoController.text,
+                  direccionController.text,
+                  horarioController.text,
+                  telefono,
+                  empleado,
+                );
+                Navigator.pop(context);
               },
-              child: Text('Actualizar'),
+              child: const Text('Actualizar'),
             ),
           ],
         ),
